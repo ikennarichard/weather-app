@@ -1,38 +1,124 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import { useColorScheme } from "nativewind";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { themes } from "@/constants/colors";
+import React, {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useColorScheme as useNWColorScheme } from "nativewind";
+import { useColorScheme } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Location, WeatherDataProps } from "@/type";
+import {
+  foreCastEnpoint,
+  getApiService,
+  locationEndPoint,
+} from "@/services/api";
+import { WEATHER_API_KEY } from "@/constants/data";
+type ColorScheme = "light" | "dark";
 
+// Define the context properties
 type WeatherProps = {
-  theme: "light" | "dark" | undefined;
-  setColorScheme: (scheme: "light" | "dark" | "system") => void;
+  theme: ColorScheme;
+  toggleTheme: (theme: ColorScheme) => void;
+  locations: Location[];
+  searchTerm: string;
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  handleGetWeather: (value: string) => void;
+  handleSearchLocations: (value: string) => void;
+  weather: WeatherDataProps;
 };
 
-type LocationProps = {};
-
-const weatherContext = createContext({} as WeatherProps);
+const WeatherContext = createContext<WeatherProps | undefined>(undefined);
 
 export const useWeatherContext = () => {
-  return useContext(weatherContext);
+  const context = useContext(WeatherContext);
+  if (!context) {
+    throw new Error("useWeatherContext must be used within a WeatherProvider");
+  }
+  return context;
 };
 
 export default function WeatherProvider({ children }: { children: ReactNode }) {
-  const [locations, setLocations] = useState<LocationProps | null>([]);
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const systemColorScheme = useColorScheme() as ColorScheme;
+  const [theme, setTheme] = useState<ColorScheme>(systemColorScheme);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [weather, setWeather] = useState<WeatherDataProps>(
+    {} as WeatherDataProps
+  );
+  const { setColorScheme } = useNWColorScheme();
+  const [locations, setLocations] = useState<Location[]>([]);
 
-  const exported: WeatherProps = {
-    theme: colorScheme,
-    setColorScheme,
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const storedTheme = await AsyncStorage.getItem("theme");
+        if (storedTheme) {
+          setTheme(storedTheme as ColorScheme);
+          setColorScheme(storedTheme as ColorScheme);
+        } else {
+          setTheme(systemColorScheme || "light");
+          setColorScheme(systemColorScheme || "light");
+        }
+      } catch (error) {
+        console.error("Error loading theme:", error);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  useEffect(() => {
+    const getLastSearched = async () => {
+      const name = await AsyncStorage.getItem("city");
+      if (name) {
+        handleGetWeather(name);
+      }
+    };
+    getLastSearched();
+  }, []);
+
+  const handleGetWeather = async (loc: string) => {
+    setLocations([]);
+    const data = await getApiService(foreCastEnpoint(WEATHER_API_KEY, loc));
+    setWeather(data);
+    await AsyncStorage.setItem("city", loc);
   };
-  
+
+  const handleSearchLocations = async (value: string) => {
+    if (value.length > 2) {
+      const data = await getApiService(
+        locationEndPoint(WEATHER_API_KEY, value)
+      );
+      setLocations(data);
+    }
+  };
+
+  const toggleTheme = async (selectedTheme: ColorScheme) => {
+    try {
+      setTheme(selectedTheme);
+      setColorScheme(selectedTheme);
+      await AsyncStorage.setItem("theme", selectedTheme);
+    } catch (error) {
+      console.error("Error saving theme:", error);
+    }
+  };
+
   return (
-    <weatherContext.Provider value={exported}>
-      <SafeAreaView
-        style={themes[colorScheme ?? "dark"]}
-        className="bg-red-500"
-      >
-        {children}
-      </SafeAreaView>
-    </weatherContext.Provider>
+    <WeatherContext.Provider
+      value={{
+        theme,
+        toggleTheme,
+        locations,
+        searchTerm,
+        setSearchTerm,
+        handleGetWeather,
+        weather,
+        handleSearchLocations,
+      }}
+    >
+      {children}
+    </WeatherContext.Provider>
   );
 }
