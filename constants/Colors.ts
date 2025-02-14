@@ -11,6 +11,6 @@ export const themes = {
 
 
 export const weatherColors: any = {
-  sunny: '#FFCC33',
+  'Sunny': '#FFCC33',
   'Clear': '121b3a'
 }
