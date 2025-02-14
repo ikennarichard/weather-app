@@ -43,7 +43,8 @@
         {
           "mode": "development"
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true
