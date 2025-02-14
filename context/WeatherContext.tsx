@@ -17,6 +17,7 @@ import {
   locationEndPoint,
 } from "@/services/api";
 import { WEATHER_API_KEY } from "@/constants/data";
+import { saveWeatherData } from "@/services/db";
 type ColorScheme = "light" | "dark";
 
 // Define the context properties
@@ -50,6 +51,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
   );
   const { setColorScheme } = useNWColorScheme();
   const [locations, setLocations] = useState<Location[]>([]);
+  const [prevLocation, setPrevLocation] = useState<string | null>(null);
 
   useEffect(() => {
     const loadTheme = async () => {
@@ -78,6 +80,23 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
     };
     getLastSearched();
   }, []);
+
+  useEffect(() => {
+    if (weather?.location?.name && weather?.location?.name !== prevLocation) {
+      (async () => {
+        await saveWeatherData(
+          weather?.location?.name,
+          weather?.location?.country,
+          weather?.current?.temp_c,
+          weather?.current?.condition?.text,
+          weather?.current?.wind_kph,
+          weather?.current?.humidity,
+          new Date().toISOString()
+        );
+        setPrevLocation(weather?.location?.name); // Update previous location
+      })();
+    }
+  }, [weather]); // Runs only when `weather` changes
 
   const handleGetWeather = async (loc: string) => {
     setLocations([]);

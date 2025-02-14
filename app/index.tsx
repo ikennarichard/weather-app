@@ -26,6 +26,9 @@ import { weatherIcons } from "@/constants/data";
 import { formatTime } from "@/utils/formatTime";
 import { getDayFromDate } from "@/utils/getDayName";
 import Animated from "react-native-reanimated";
+import { setupDatabase } from "@/services/db";
+import { Link } from "expo-router";
+import { router } from "expo-router";
 
 export default function Index() {
   const {
@@ -38,20 +41,25 @@ export default function Index() {
   } = useWeatherContext();
   const { current, location } = weather;
 
-  // useEffect(() => {
-  //   // initialize one signal
-  //   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-  //   OneSignal.initialize("3ce46b73-83b5-4f26-a712-c4a0cdef9554");
+  useEffect(() => {
+    //   // initialize one signal
+    //   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+    //   OneSignal.initialize("3ce46b73-83b5-4f26-a712-c4a0cdef9554");
 
-  //   // Also need enable notifications to complete OneSignal setup
-  //   OneSignal.Notifications.requestPermission(true);
-  // }, []);
+    //   // Also need enable notifications to complete OneSignal setup
+    //   OneSignal.Notifications.requestPermission(true);
+    (async () => {
+      await setupDatabase();
+    })();
+  }, []);
   return (
     <SafeAreaView
       className={`py-6 px-3 flex-col flex-1 gap-12 ${
         theme === "dark" ? "bg-red-400" : "bg-slate-100"
       }`}
     >
+      <StatusBar style="auto"/>
+      <Link href='/history' className="underline text-blue-300">History</Link>
       <KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-row items-center justify-around">
@@ -137,7 +145,7 @@ export default function Index() {
         </View>
         <Animated.ScrollView
           horizontal
-          contentContainerStyle={{gap: 10}}
+          contentContainerStyle={{ gap: 10 }}
           showsHorizontalScrollIndicator={false}
         >
           {weather?.forecast?.forecastday?.map((item, index) => (
@@ -150,8 +158,8 @@ export default function Index() {
                 color={weatherColors[item?.day?.condition?.text]}
                 size={30}
               />
-              
-              <Text>{item?.date ? getDayFromDate(item?.date) : ''}</Text>
+
+              <Text>{item?.date ? getDayFromDate(item?.date) : ""}</Text>
               <Text>{item?.day?.avgtemp_c}&#176;</Text>
             </View>
           ))}
