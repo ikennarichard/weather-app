@@ -3,16 +3,13 @@ import {
   Text,
   TextInput,
   View,
-  Image,
   Pressable,
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  MaterialIcons,
   Feather,
   FontAwesome,
   MaterialCommunityIcons,
@@ -28,7 +25,6 @@ import { getDayFromDate } from "@/utils/getDayName";
 import Animated from "react-native-reanimated";
 import { setupDatabase } from "@/services/db";
 import { Link } from "expo-router";
-import { router } from "expo-router";
 
 export default function Index() {
   const {
