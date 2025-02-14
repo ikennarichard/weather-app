@@ -2,6 +2,7 @@ export const WEATHER_API_KEY= 'c961a99618f04b90b6910824251302'
 
 export const weatherIcons: any  = {
   'Clear': 'weather-night',
+  'Mist': 'weather-fog',
   'Sunny': 'weather-sunny',
   'Moderate rain': 'weather-hail',
   'Patchy rain possible': 'weather-hazy',
@@ -9,7 +10,7 @@ export const weatherIcons: any  = {
   "Patchy light drizzle": 'weather-hazy',
   'Partly cloudy': 'weather-partly-cloudy',
   'Partly Cloudy ': 'weather-partly-cloudy',
-  "Overcast":  'weather-fog',
+  "Overcast":  'weather-cloudy',
   "Cloudy": 'weather-cloudy',
   "Light rain": 'weather-partly-rainy',
   "Light rain shower": 'weather-partly-rainy',

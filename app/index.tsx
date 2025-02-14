@@ -117,7 +117,7 @@ export default function Index() {
         </Text>
         <MaterialCommunityIcons
           name={weatherIcons[current?.condition?.text]}
-          color={weatherColors[current?.condition?.text]}
+          color={weatherColors[current?.condition?.text] || '#999'}
           size={150}
         />
         <View className="flex-col items-center">
