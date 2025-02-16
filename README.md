@@ -1,50 +1,113 @@
-# Welcome to your Expo app 👋
+# 🌦️ Weather App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> ☁️ Live demo [Appetize]().
 
-## Get started
+## 🚀 Table of Contents
 
-1. Install dependencies
+- [General Info](#general-information)
+- [Technologies Used](#technologies-used)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Project Status](#project-status)
+- [Room for Improvement](#room-for-improvement)
+- [Acknowledgements](#acknowledgements)
+- [Authors](#authors)
+- [License](#license)
+- [What I Learned](#what-i-learned)
 
-   ```bash
-   npm install
-   ```
+## General Information
 
-2. Start the app
+This is a React Native app that provides real-time weather updates, notifications, and a sleek UI to keep you informed about weather forecast anytime, anywhere.
 
-   ```bash
-    npx expo start
-   ```
+## Technologies Used
 
-In the output, you'll find options to open the app in a
+- React Native & Expo.
+- OneSignal for push notifications.
+- NativeWind.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Features
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- Real-time weather updates
+- Push notifications for weather alerts
 
-## Get a fresh project
+## Screenshots
 
-When you're ready, run:
+- Not available yet. Stay tuned! 📷
 
-```bash
-npm run reset-project
+## Setup
+
+Get started in just a few steps!
+
+1. Clone the repository:
+
+```sh
+  git clone https://github.com/ikennarichard/weather-app.git
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Navigate to the project folder:
 
-## Learn more
+```sh
+  cd weather-app
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3. Install dependencies:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```sh
+  npm install
+```
 
-## Join the community
+4. Start the development server:
 
-Join our community of developers creating universal apps.
+```sh
+  npm start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Usage
+
+Simply open the app to see your current weather conditions and receive timely updates.
+
+## Project Status
+
+🚧 Project is: **In Progress** – New features coming soon!
+
+## Room for Improvement
+
+- Implement **location-based weather updates** using device GPS.
+- Add **unit conversions** (°C ↔ °F).
+- Enable **offline mode** using cached data.
+
+## Acknowledgements
+
+Shoutout to:
+
+- [Mensa Philosophical Circle](https://www.mpcircle.org)
+- The React Native & Expo community
+- OneSignal
+
+## Authors
+
+- **[Ikenna Richard]**
+
+## License
+
+This project is open source and available under the [MIT License](./LICENSE). Feel free to fork and contribute!
+
+## What I Learned
+
+### Notification Routing
+
+OneSignal interacts with platform-specific notification services:
+
+- **Apple Push Notification Service (APNs)** for iOS
+- **Firebase Cloud Messaging (FCM)** for Android
+
+These services wake up the user's device and deliver the message in real-time.
+
+### Handling Notifications on the Client Side
+
+When a push notification is received, the app decides whether to:
+
+1. Display the notification as a system alert.
+2. Perform an in-app action (e.g., navigate to the weather details screen).
