@@ -13,7 +13,30 @@
       "bundleIdentifier": "com.onesignal.example"
     },
     "extra": {
-      "oneSignalAppId": "3ce46b73-83b5-4f26-a712-c4a0cdef9554"
+      "oneSignalAppId": "3ce46b73-83b5-4f26-a712-c4a0cdef9554",
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "targetName": "OneSignalNotificationServiceExtension",
+                  "bundleIdentifier": "com.onesignal.example.OneSignalNotificationServiceExtension",
+                  "entitlements": {
+                    "com.apple.security.application-groups": [
+                      "group.com.onesignal.example.onesignal"
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "projectId": "599770ab-18ca-4da4-a522-f16a437c7400"
+      }
     },
     "android": {
       "adaptiveIcon": {
