@@ -13,41 +13,35 @@ import {
   Feather,
   FontAwesome,
   MaterialCommunityIcons,
+  MaterialIcons,
 } from "@expo/vector-icons";
-import React from "react";
+import React, { useState } from "react";
 import { useWeatherContext } from "@/context/WeatherContext";
 import { useEffect } from "react";
-import { NotificationClickEvent, OneSignal } from "react-native-onesignal";
+import { OneSignal } from "react-native-onesignal";
 import { weatherColors } from "@/constants/Colors";
 import { weatherIcons } from "@/constants/data";
 import { formatTime } from "@/utils/formatTime";
 import { getDayFromDate } from "@/utils/getDayName";
 import Animated from "react-native-reanimated";
 import { setupDatabase } from "@/services/db";
-import { Link, router } from "expo-router";
-import { initOneSignal } from "@/utils/onesignal";
+import { Link } from "expo-router";
+import { initOneSignal, handler } from "@/utils/onesignal";
 
 export default function Index() {
   const {
     theme,
-    toggleTheme,
+    isMenuOpen,
     locations,
+    weather,
+    toggleTheme,
     handleSearchLocations,
     handleGetWeather,
-    weather,
+    toggleMenu,
   } = useWeatherContext();
   const { current, location } = weather;
+  const [isCelcius, setIsCelcius] = useState(true)
   const isDarkMode = theme === "dark";
-
-  const handler = (event: NotificationClickEvent) => {
-    const data: any = event.notification.additionalData;
-    const history = data ? data["history"] : null;
-
-    if (history) {
-      router.push(history);
-    }
-    console.log("OneSignal: notification clicked:", event);
-  };
 
   useEffect(() => {
     (async () => {
@@ -61,7 +55,7 @@ export default function Index() {
       OneSignal.Notifications.removeEventListener("click", handler);
     };
   }, []);
-  
+
   return (
     <SafeAreaView
       className={`py-6 px-3 flex-col flex-1 gap-9 ${
@@ -69,12 +63,34 @@ export default function Index() {
       }`}
     >
       <StatusBar style="auto" />
-      <Link
-        href="/history"
-        className={`underline ${isDarkMode ? "text-white" : "text-blue-400"}`}
+
+
+      <Pressable onPress={toggleMenu}>
+        <MaterialIcons
+          name="menu"
+          size={24}
+          color={isDarkMode ? "white" : "black"}
+        />
+      </Pressable>
+
+      {/* menu items */}
+      <View
+        className={`transition-transform duration-150 ease-linear absolute top-24 left-3 z-10 px-2 py-6 flex-col gap-3 rounded-lg w-32 ${
+          isMenuOpen ? "translate-x-0" : "-translate-x-[100vh]"
+        } ${isDarkMode ? "bg-slate-200" : "bg-slate-300"}`}
       >
-        History
-      </Link>
+        <Link
+          href="/history"
+         className="underline"
+        >
+          View History
+        </Link>
+        <Pressable className="bg-gray-500 rounded-lg p-2" onPress={() => setIsCelcius(!isCelcius)}>
+          <Text className="text-white">{isCelcius ? 'Convert to Fahrenheit' : 'Convert to Celcius'}</Text>
+        </Pressable>
+      </View>
+
+
       <KeyboardAvoidingView>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-row items-center justify-around">
@@ -141,7 +157,8 @@ export default function Index() {
             className="text-4xl font-semibold"
             style={{ color: `${isDarkMode ? "white" : null}` }}
           >
-            {current?.temp_c}&#176;
+            {isCelcius ? current?.temp_c : current?.temp_f}&#176;
+            <Text>{isCelcius ? 'C' : 'F'}</Text>
           </Text>
           <Text style={{ color: `${isDarkMode ? "white" : null}` }}>
             {current?.condition?.text}
@@ -215,7 +232,8 @@ export default function Index() {
                 {item?.date ? getDayFromDate(item?.date) : ""}
               </Text>
               <Text style={{ color: `${isDarkMode ? "white" : null}` }}>
-                {item?.day?.avgtemp_c}&#176;
+                {isCelcius ? item?.day?.avgtemp_c : item?.day?.avgtemp_f}&#176;
+                <Text>{isCelcius ? 'C' : 'F'}</Text>
               </Text>
             </View>
           ))}

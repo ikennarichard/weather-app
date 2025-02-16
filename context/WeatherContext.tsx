@@ -30,6 +30,8 @@ type WeatherProps = {
   handleGetWeather: (value: string) => void;
   handleSearchLocations: (value: string) => void;
   weather: WeatherDataProps;
+  isMenuOpen: boolean;
+  toggleMenu: () => void
 };
 
 const WeatherContext = createContext<WeatherProps | undefined>(undefined);
@@ -46,6 +48,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
   const systemColorScheme = useColorScheme() as ColorScheme;
   const [theme, setTheme] = useState<ColorScheme>(systemColorScheme);
   const [searchTerm, setSearchTerm] = useState<string>("kano");
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [weather, setWeather] = useState<WeatherDataProps>(
     {} as WeatherDataProps
   );
@@ -100,6 +103,10 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
     }
   }, [weather]);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(prev => !prev)
+  }
+
   const handleGetWeather = async (loc: string) => {
     setLocations([]);
     const data = await getApiService(foreCastEnpoint(WEATHER_API_KEY, loc));
@@ -130,12 +137,14 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
     <WeatherContext.Provider
       value={{
         theme,
-        toggleTheme,
         locations,
         searchTerm,
+        weather,
+        isMenuOpen,
+        toggleMenu,
+        toggleTheme,
         setSearchTerm,
         handleGetWeather,
-        weather,
         handleSearchLocations,
       }}
     >
