@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, FlatList, Pressable } from "react-native";
+import { Text, FlatList, Pressable } from "react-native";
 import { getWeatherHistory, clearWeatherHistory } from "../services/db";
 import { WeatherHistoryProps } from "../type";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,7 +19,7 @@ export default function WeatherHistoryScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 p-5">
+    <SafeAreaView className="flex-1 p-5 gap-3">
       <Pressable
         onPress={async () => {
           await clearWeatherHistory();
@@ -28,6 +28,7 @@ export default function WeatherHistoryScreen() {
       >
         <Text className="bg-gray-700 w-28 text-white rounded-lg py-2 px-1">Clear History</Text>
       </Pressable>
+      {history.length === 0 && <Text className="font-semibold text-lg">No history available</Text>}
       <FlatList
       className="mt-3"
         data={history}

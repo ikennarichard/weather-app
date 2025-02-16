@@ -45,7 +45,7 @@ export const useWeatherContext = () => {
 export default function WeatherProvider({ children }: { children: ReactNode }) {
   const systemColorScheme = useColorScheme() as ColorScheme;
   const [theme, setTheme] = useState<ColorScheme>(systemColorScheme);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("kano");
   const [weather, setWeather] = useState<WeatherDataProps>(
     {} as WeatherDataProps
   );
@@ -73,9 +73,11 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const getLastSearched = async () => {
-      const name = await AsyncStorage.getItem("city");
-      if (name) {
-        handleGetWeather(name);
+      const city = await AsyncStorage.getItem("city");
+      if (city) {
+        handleGetWeather(city);
+      } else {
+        handleGetWeather(searchTerm)
       }
     };
     getLastSearched();
@@ -96,7 +98,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
         setPrevLocation(weather?.location?.name); // Update previous location
       })();
     }
-  }, [weather]); // Runs only when `weather` changes
+  }, [weather]);
 
   const handleGetWeather = async (loc: string) => {
     setLocations([]);
@@ -106,7 +108,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
   };
 
   const handleSearchLocations = async (value: string) => {
-    if (value.length > 2) {
+    if (value.length >= 2) {
       const data = await getApiService(
         locationEndPoint(WEATHER_API_KEY, value)
       );

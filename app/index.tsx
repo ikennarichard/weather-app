@@ -17,14 +17,15 @@ import {
 import React from "react";
 import { useWeatherContext } from "@/context/WeatherContext";
 import { useEffect } from "react";
-import { LogLevel, OneSignal } from "react-native-onesignal";
+import { NotificationClickEvent, OneSignal } from "react-native-onesignal";
 import { weatherColors } from "@/constants/Colors";
 import { weatherIcons } from "@/constants/data";
 import { formatTime } from "@/utils/formatTime";
 import { getDayFromDate } from "@/utils/getDayName";
 import Animated from "react-native-reanimated";
 import { setupDatabase } from "@/services/db";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { initOneSignal } from "@/utils/onesignal";
 
 export default function Index() {
   const {
@@ -38,17 +39,29 @@ export default function Index() {
   const { current, location } = weather;
   const isDarkMode = theme === "dark";
 
-  useEffect(() => {
-    //   // initialize one signal
-    //   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-    //   OneSignal.initialize("3ce46b73-83b5-4f26-a712-c4a0cdef9554");
+  const handler = (event: NotificationClickEvent) => {
+    const data: any = event.notification.additionalData;
+    const history = data ? data["history"] : null;
 
-    //   // Also need enable notifications to complete OneSignal setup
-    //   OneSignal.Notifications.requestPermission(true);
+    if (history) {
+      router.push(history);
+    }
+    console.log("OneSignal: notification clicked:", event);
+  };
+
+  useEffect(() => {
     (async () => {
       await setupDatabase();
+      await initOneSignal();
     })();
+
+    OneSignal.Notifications.addEventListener("click", handler);
+
+    return () => {
+      OneSignal.Notifications.removeEventListener("click", handler);
+    };
   }, []);
+  
   return (
     <SafeAreaView
       className={`py-6 px-3 flex-col flex-1 gap-9 ${
@@ -68,11 +81,12 @@ export default function Index() {
             {/* text input */}
             <TextInput
               className={`px-6 rounded-3xl h-12 w-[80%] border border-gray-300 ${
-                isDarkMode ? "placeholder:text-white" : ""
+                isDarkMode ? "placeholder:text-white" : null
               }`}
               placeholder="Enter your location"
               secureTextEntry={false}
               onChangeText={handleSearchLocations}
+              style={{ color: isDarkMode ? "white" : "black" }}
             />
             <Pressable
               onPress={() => toggleTheme(theme === "dark" ? "light" : "dark")}
@@ -87,21 +101,23 @@ export default function Index() {
         </TouchableWithoutFeedback>
 
         {locations?.length > 0 ? (
-          <View className="flex-col gap-3 rounded-xl absolute top-16 left-3 p-3 z-10 bg-gray-200 w-10/12">
+          <View className="flex-col gap-3 rounded-xl absolute overflow-hidden top-16 left-3 p-3 z-10 bg-gray-200 w-10/12">
             {locations?.map((item, index) => (
               <Pressable
                 key={index}
                 className="flex-row gap-3"
                 onPress={() => handleGetWeather(item.name)}
               >
-                <FontAwesome name="location-arrow" size={16} />
-                <Text
-                  className={` border-gray-300 w-full pb-1 ${
+                <View
+                  className={` border-gray-300 w-[90%] pb-1 flex-row gap-3 items-center ${
                     index === locations.length - 1 ? "border-none" : "border-b"
                   }`}
                 >
-                  {item.name}, {item.country}
-                </Text>
+                  <FontAwesome name="location-arrow" size={16} />
+                  <Text>
+                    {item.name}, {item.country}
+                  </Text>
+                </View>
               </Pressable>
             ))}
           </View>
@@ -116,8 +132,8 @@ export default function Index() {
           {location?.name}, {location?.country}
         </Text>
         <MaterialCommunityIcons
-          name={weatherIcons[current?.condition?.text]}
-          color={weatherColors[current?.condition?.text] || '#999'}
+          name={weatherIcons[current?.condition?.text?.trim()]}
+          color={weatherColors[current?.condition?.text] || "#999"}
           size={150}
         />
         <View className="flex-col items-center">
@@ -191,12 +207,16 @@ export default function Index() {
             >
               <MaterialCommunityIcons
                 name={weatherIcons[item?.day?.condition?.text]}
-                color={weatherColors[item?.day?.condition?.text]}
+                color={weatherColors[item?.day?.condition?.text] || "#333"}
                 size={30}
               />
 
-              <Text style={{ color: `${isDarkMode ? "white" : null}` }}>{item?.date ? getDayFromDate(item?.date) : ""}</Text>
-              <Text style={{ color: `${isDarkMode ? "white" : null}` }}>{item?.day?.avgtemp_c}&#176;</Text>
+              <Text style={{ color: `${isDarkMode ? "white" : null}` }}>
+                {item?.date ? getDayFromDate(item?.date) : ""}
+              </Text>
+              <Text style={{ color: `${isDarkMode ? "white" : null}` }}>
+                {item?.day?.avgtemp_c}&#176;
+              </Text>
             </View>
           ))}
         </Animated.ScrollView>
