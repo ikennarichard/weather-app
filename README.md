@@ -96,7 +96,7 @@ Shoutout to:
 
 ## Authors
 
-- **[Ikenna Richard]**
+- **[Ikenna Richard](https://ikennarichard.vercel.app)**
 
 ## License
 
