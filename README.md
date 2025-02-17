@@ -1,6 +1,6 @@
 # 🌦️ Weather App
 
-> ☁️ Live demo [Appetize]().
+> [APK](./assets/application-8bc71fbe-154b-4dc2-b05c-0a1f4e8e1363.apk).
 
 ## 🚀 Table of Contents
 
@@ -26,8 +26,8 @@ This is a React Native app that provides real-time weather updates, notification
 - React Native & Expo.
 - OneSignal for push notifications.
 - NativeWind.
-- Async storage
-- SQLite
+- Async storage.
+- SQLite.
 
 ## Features
 
@@ -62,9 +62,16 @@ Get started in just a few steps!
 
 4. Start the development server:
 
-```sh
-  npm start
-```
+  You can also use USB debugging or emulator with:
+  ```sh
+  npm run android 
+  <!-- npm run ios: for iphone -->
+  ```
+
+  Or start the development server with:
+  ```sh
+    npm start
+  ```
 
 ## Usage
 
