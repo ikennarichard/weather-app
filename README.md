@@ -26,6 +26,8 @@ This is a React Native app that provides real-time weather updates, notification
 - React Native & Expo.
 - OneSignal for push notifications.
 - NativeWind.
+- Async storage
+- SQLite
 
 ## Features
 
