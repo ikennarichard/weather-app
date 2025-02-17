@@ -1,14 +1,14 @@
-import * as SQLite from 'expo-sqlite';
-import { WeatherHistoryProps } from '../type';
+import * as SQLite from "expo-sqlite";
+import { WeatherHistoryProps } from "../type";
 
 let db: SQLite.SQLiteDatabase;
 
 export const setupDatabase = async (): Promise<void> => {
   try {
-    db = await SQLite.openDatabaseAsync('weather.db');
+    db = await SQLite.openDatabaseAsync("weather.db");
 
     // Enable Write-Ahead Logging (WAL) for better performance
-    await db.execAsync('PRAGMA journal_mode = WAL;');
+    await db.execAsync("PRAGMA journal_mode = WAL;");
 
     await db.execAsync(`
       CREATE TABLE IF NOT EXISTS weather_history (
@@ -22,43 +22,71 @@ export const setupDatabase = async (): Promise<void> => {
         date TEXT NOT NULL
       );
     `);
-    
-    console.log('Database initialized');
+
+    console.log("Database initialized");
   } catch (error) {
-    console.error('Error initializing database:', error);
+    console.error("Error initializing database:", error);
+  } finally {
+    await db.closeAsync();
   }
 };
 
-export const saveWeatherData = async (city: string, country: string, temperature: number, condition: string, wind_speed: number, humidity: number, date: string): Promise<void> => {
+export const saveWeatherData = async (
+  city: string,
+  country: string,
+  temperature: number,
+  condition: string,
+  wind_speed: number,
+  humidity: number,
+  date: string
+): Promise<void> => {
   try {
+    db = await SQLite.openDatabaseAsync("weather.db");
     const result = await db.runAsync(
       `INSERT INTO weather_history (city, country, temperature, condition, wind_speed, humidity, date) 
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      city, country, temperature, condition, wind_speed, humidity, date
+      city,
+      country,
+      temperature,
+      condition,
+      wind_speed,
+      humidity,
+      date
     );
 
-    console.log('Inserted row ID:', result.lastInsertRowId);
+    console.log("Inserted row ID:", result.lastInsertRowId);
   } catch (error) {
-    console.error('Error inserting weather data:', error);
+    console.error("Error inserting weather data:", error);
+  } finally {
+    await db.closeAsync();
   }
 };
 
 export const getWeatherHistory = async (): Promise<WeatherHistoryProps[]> => {
   try {
-    const history: WeatherHistoryProps[] = await db.getAllAsync<WeatherHistoryProps>('SELECT * FROM weather_history ORDER BY date DESC');
+    db = await SQLite.openDatabaseAsync("weather.db");
+    const history: WeatherHistoryProps[] =
+      await db.getAllAsync<WeatherHistoryProps>(
+        "SELECT * FROM weather_history ORDER BY date DESC"
+      );
     return history;
   } catch (error) {
-    console.error('Error fetching history:', error);
+    console.error("Error fetching history:", error);
     return [];
+  } finally {
+    await db.closeAsync();
   }
 };
 
 // delete history
 export const clearWeatherHistory = async (): Promise<void> => {
   try {
-    await db.runAsync('DELETE FROM weather_history');
-    console.log('Weather history cleared');
+    db = await SQLite.openDatabaseAsync("weather.db");
+    await db.runAsync("DELETE FROM weather_history");
+    console.log("Weather history cleared");
   } catch (error) {
-    console.error('Error clearing history:', error);
+    console.error("Error clearing history:", error);
+  } finally {
+    await db.closeAsync();
   }
 };
