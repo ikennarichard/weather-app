@@ -26,7 +26,7 @@ import { getDayFromDate } from "@/utils/getDayName";
 import Animated from "react-native-reanimated";
 import { setupDatabase } from "@/services/db";
 import { Link } from "expo-router";
-import { initOneSignal, handler } from "@/utils/onesignal";
+import { initOneSignal, handler } from "@/services/onesignal";
 
 export default function Index() {
   const {

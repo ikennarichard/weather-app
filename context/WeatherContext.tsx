@@ -18,6 +18,7 @@ import {
 } from "@/services/api";
 import { WEATHER_API_KEY } from "@/constants/data";
 import { saveWeatherData } from "@/services/db";
+
 type ColorScheme = "light" | "dark";
 
 // Define the context properties
@@ -31,7 +32,7 @@ type WeatherProps = {
   handleSearchLocations: (value: string) => void;
   weather: WeatherDataProps;
   isMenuOpen: boolean;
-  toggleMenu: () => void
+  toggleMenu: () => void;
 };
 
 const WeatherContext = createContext<WeatherProps | undefined>(undefined);
@@ -80,7 +81,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
       if (city) {
         handleGetWeather(city);
       } else {
-        handleGetWeather(searchTerm)
+        handleGetWeather(searchTerm);
       }
     };
     getLastSearched();
@@ -104,8 +105,8 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
   }, [weather]);
 
   const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev)
-  }
+    setIsMenuOpen((prev) => !prev);
+  };
 
   const handleGetWeather = async (loc: string) => {
     setLocations([]);
