@@ -62,10 +62,9 @@ Get started in just a few steps!
 
 4. Start the development server:
 
-  You can also use USB debugging or emulator with:
+  You can use an emulator with:
   ```sh
-  npm run android 
-  <!-- npm run ios: for iphone -->
+  npm run android # or `npm run ios`
   ```
 
   Or start the development server with:
