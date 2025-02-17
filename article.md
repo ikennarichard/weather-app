@@ -2,7 +2,7 @@
 
 In this article, I’ll walk you through the process of setting up a Weather application with React native Expo.
 
-Mobile apps are more relevant today than ever before, they are also a big driver of user engagement. This weather app dives into building a mobile application with our favorite React library, it gets real-time weather updates from [WeatherAPI.com](https://www.weatherapi.com) and also intergrates **Onesignal** for push notification. 
+Mobile apps are more relevant today than ever before, they are also a big driver of user engagement. This weather app dives into building a mobile application with our favorite React library, it gets real-time weather updates from [WeatherAPI.com](https://www.weatherapi.com) and also intergrates **Onesignal** for push notification.
 
 ## The Core Technologies
 
