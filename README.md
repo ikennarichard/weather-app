@@ -38,9 +38,8 @@ This is a React Native app that provides real-time weather updates, notification
 
 - video demo
 
-<video width="320" height="240" controls>
-  <source src="./assets/video-demo.mp4" type="video/mp4">
-</video>
+https://github.com/user-attachments/assets/20b7464e-ed6f-48f2-be2a-527531988fb8
+
 
 ## Setup
 
