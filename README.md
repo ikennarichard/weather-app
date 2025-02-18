@@ -7,7 +7,7 @@
 - [General Info](#general-information)
 - [Technologies Used](#technologies-used)
 - [Features](#features)
-- [Screenshots](#screenshots)
+- [Demo](#demo)
 - [Setup](#setup)
 - [Usage](#usage)
 - [Project Status](#project-status)
@@ -34,9 +34,13 @@ This is a React Native app that provides real-time weather updates, notification
 - Real-time weather updates
 - Push notifications for weather alerts
 
-## Screenshots
+## Demo
 
-- Not available yet. Stay tuned! 📷
+- video demo
+
+<video width="320" height="240" controls>
+  <source src="./assets/video-demo.mp4" type="video/mp4">
+</video>
 
 ## Setup
 
