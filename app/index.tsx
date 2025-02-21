@@ -26,7 +26,7 @@ import { getDayFromDate } from "@/utils/getDayName";
 import Animated from "react-native-reanimated";
 import { setupDatabase } from "@/services/db";
 import { Link } from "expo-router";
-import { initOneSignal, handler } from "@/services/onesignal";
+import { initOneSignal, handler, sendPushNotification } from "@/services/onesignal";
 
 export default function Index() {
   const {
@@ -47,6 +47,7 @@ export default function Index() {
     (async () => {
       await setupDatabase();
       await initOneSignal();
+      // sendPushNotification();
     })();
 
     OneSignal.Notifications.addEventListener("click", handler);
@@ -82,6 +83,7 @@ export default function Index() {
         <Link
           href="/history"
          className="underline"
+         onPress={async () => await sendPushNotification()}
         >
           View History
         </Link>
@@ -148,8 +150,8 @@ export default function Index() {
           {location?.name}, {location?.country}
         </Text>
         <MaterialCommunityIcons
-          name={weatherIcons[current?.condition?.text?.trim()]}
-          color={weatherColors[current?.condition?.text] || "#999"}
+          name={weatherIcons?.current?.condition?.text?.trim()}
+          color={weatherColors?.current?.condition?.text || "#999"}
           size={150}
         />
         <View className="flex-col items-center">

@@ -1,10 +1,10 @@
-import { Alert } from "react-native";
+const API_KEY = process.env.EXPO_PUBLIC_WEATHER_API_KEY;
 
-export const foreCastEnpoint = (apiKey: string, cityName: string) =>
-  `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${cityName}&days=6&aqi=no&alerts=no`;
+export const foreCastEnpoint = (cityName: string) =>
+  `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cityName}&days=6&aqi=no&alerts=no`;
 
-export const locationEndPoint = (apiKey: string, cityName: string) =>
-  `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${cityName}`;
+export const locationEndPoint = (cityName: string) =>
+  `https://api.weatherapi.com/v1/search.json?key=${API_KEY}&q=${cityName}`;
 
 export const getApiService = async (endpoint: string) => {
   try {
@@ -17,8 +17,9 @@ export const getApiService = async (endpoint: string) => {
     return json;
   } catch (error) {
     if (error instanceof Error) {
-      Alert.alert(error.message);
+      console.error(error.message);
     }
     console.error(error);
+    return;
   }
 };

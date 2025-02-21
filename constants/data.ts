@@ -1,5 +1,3 @@
-export const WEATHER_API_KEY= 'c961a99618f04b90b6910824251302'
-
 export const weatherIcons: any  = {
   'Clear': 'weather-sunset-down',
   'Mist': 'weather-fog',

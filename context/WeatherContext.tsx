@@ -16,7 +16,6 @@ import {
   getApiService,
   locationEndPoint,
 } from "@/services/api";
-import { WEATHER_API_KEY } from "@/constants/data";
 import { saveWeatherData } from "@/services/db";
 
 type ColorScheme = "light" | "dark";
@@ -110,7 +109,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
 
   const handleGetWeather = async (loc: string) => {
     setLocations([]);
-    const data = await getApiService(foreCastEnpoint(WEATHER_API_KEY, loc));
+    const data = await getApiService(foreCastEnpoint(loc));
     setWeather(data);
     await AsyncStorage.setItem("city", loc);
   };
@@ -118,7 +117,7 @@ export default function WeatherProvider({ children }: { children: ReactNode }) {
   const handleSearchLocations = async (value: string) => {
     if (value.length >= 2) {
       const data = await getApiService(
-        locationEndPoint(WEATHER_API_KEY, value)
+        locationEndPoint(value)
       );
       setLocations(data);
     }
