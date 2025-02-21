@@ -1,7 +1,5 @@
 # 🌦️ Weather App
 
-> [APK](./assets/application-8bc71fbe-154b-4dc2-b05c-0a1f4e8e1363.apk).
-
 ## 🚀 Table of Contents
 
 - [General Info](#general-information)
@@ -73,6 +71,14 @@ Get started in just a few steps!
   Or start the development server with:
   ```sh
     npm start
+  ```
+
+### Environment Variables
+
+  ```sh
+  EXPO_PUBLIC_WEATHER_API_KEY=
+  EXPO_PUBLIC_ONESIGNAL_APP_ID=
+  EXPO_PUBLIC_ONESIGNAL_API_KEY=
   ```
 
 ## Usage
