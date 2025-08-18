@@ -99,7 +99,6 @@ Simply open the app to see your current weather conditions and receive timely up
 
 Shoutout to:
 
-- [Mensa Philosophical Circle](https://www.mpcircle.org)
 - The React Native & Expo community
 - OneSignal
 
